@@ -1,0 +1,34 @@
+// external triger code esp32 or arduino uno
+// Define constants for pins
+const int triggerPin = 2;  // Pin connected to the external trigger
+const int ledPin = 13;     // Pin connected to the LED (built-in LED on most Arduino boards)
+
+// Variable to store the state of the trigger
+int triggerState = 0;
+
+void setup() {
+   Serial.begin(9600);
+  // Initialize the LED pin as an output
+  pinMode(ledPin, OUTPUT);
+  
+  // Initialize the trigger pin as an input
+  pinMode(triggerPin, INPUT);
+  
+  // Initially, turn off the LED
+  digitalWrite(ledPin, LOW);
+}
+
+void loop() {
+  // Read the state of the trigger pin
+  triggerState = digitalRead(triggerPin);
+
+  // Check if the trigger condition is met (e.g., button press)
+  if (triggerState == HIGH) {
+    // Turn on the LED
+    digitalWrite(ledPin, HIGH);
+    Serial.println("SMS Sending!");
+  } else {
+    // Turn off the LED
+    digitalWrite(ledPin, LOW);
+  }
+}

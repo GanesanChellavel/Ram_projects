@@ -1,0 +1,62 @@
+#include <MKRGSM.h>
+
+// Pin for the analog sensor (potentiometer)
+const int analogPin = A0;
+
+// Initialize the GSM library
+GSM gsmAccess;
+GSM_SMS sms;
+
+// Replace with your SIM card's PIN, if applicable
+char PINNumber[] = "0000";
+
+// Replace with your phone number
+char phoneNumber[] = "+6592424149";
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+
+  // Start GSM connection
+  while (!gsmAccess.begin(PINNumber) == GSM_READY) {
+    delay(1000);
+  }
+  Serial.println("GSM initialized.");
+
+  // Define the analog sensor pin as INPUT
+  pinMode(analogPin, INPUT);
+}
+
+void loop() {
+  // Read the analog sensor value
+  int sensorValue = analogRead(analogPin);
+
+  // Map the sensor value to a meaningful range if needed
+  // int mappedValue = map(sensorValue, 0, 1023, 0, 100);
+
+  // Check if the sensor value crosses a threshold (e.g., 500)
+  if (sensorValue > 500) {
+    // Create the SMS message
+    char message[160];
+    snprintf(message, sizeof(message), "Alert: Sensor value is %d", sensorValue);
+
+    // Send SMS
+    sendSMS(phoneNumber, message);
+
+    // Wait for a while before sending another SMS (to avoid spam)
+    delay(60000); // 1 minute
+  }
+
+  // Add additional code here for other tasks
+}
+
+void sendSMS(const char* number, const char* message) {
+  Serial.println("Sending SMS...");
+
+  // Send the SMS
+  sms.beginSMS(number);
+  sms.print(message);
+  sms.endSMS();
+
+  Serial.println("SMS sent.");
+}

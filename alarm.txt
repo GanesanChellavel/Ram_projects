@@ -1,0 +1,43 @@
+const int buzzer = 12;
+
+const int tones[] = {1000, 500, 100};
+
+void playTone(int tone, int duration) {
+  for (long i = 0; i < duration * 1000L; i += tone * 2)
+  {
+    digitalWrite(buzzer, HIGH);
+    delayMicroseconds(tone);
+    digitalWrite(buzzer, LOW);
+    delayMicroseconds(tone);
+  }
+}
+
+void setup() {
+
+  pinMode(buzzer, OUTPUT);
+  pinMode(13, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(10, OUTPUT);
+  
+}
+
+void loop() {
+  int light = analogRead(0);
+  if (light > 1000) {
+    digitalWrite(13, HIGH);
+    playTone(tones[0], 200);
+    digitalWrite(13, LOW);
+    delay(100);
+    digitalWrite(11, HIGH);
+    playTone(tones[1], 400); 
+    digitalWrite(11, LOW);
+    delay(100);
+    digitalWrite(10, HIGH);
+    playTone(tones[2], 400);
+    digitalWrite(10, LOW);
+    delay(100);
+    
+  }
+  
+}
+

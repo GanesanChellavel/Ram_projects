@@ -1,0 +1,52 @@
+-----------------------------TIMER----TRIGGER CODE WORKING..------------------POWERFAILUR----------
+int totalTime = 60; // Total time in seconds
+int currentTime = totalTime;
+const int triggerPin = 2;  // Pin connected to the external trigger
+const int ledPin = 13;     // Pin connected to the LED (built-in LED on most Arduino boards)
+
+// Variable to store the state of the trigger
+int triggerState = 0;
+int State = 1;
+
+void(* resetFunc) (void) = 0;//declare reset function at address 0
+void setup() {
+  Serial.begin(9600); // Initialize the Serial Monitor
+  Serial.println("Timer started.");
+  // Initialize the LED pin as an output
+  pinMode(ledPin, OUTPUT);
+  
+  // Initialize the trigger pin as an input
+  pinMode(triggerPin, INPUT);
+  
+  // Initially, turn off the LED
+  digitalWrite(ledPin, LOW);
+}
+
+void loop() {
+  // Read the state of the trigger pin
+  triggerState = digitalRead(triggerPin);
+  if (triggerState == LOW) {
+    digitalWrite(ledPin, LOW);
+  if (currentTime > 0) {
+    digitalWrite(ledPin, HIGH);
+    Serial.print("Time left: ");
+    Serial.print(currentTime);
+    Serial.println(" seconds");
+    delay(1000); // Wait for 1 second
+    currentTime--;
+    if(currentTime==1 ){
+      digitalWrite(ledPin, HIGH);
+      
+    }
+    
+  }
+  } else {
+    Serial.println("Time's up!");
+    
+      digitalWrite(ledPin, LOW);
+      resetFunc(); //call reset 
+      // Timer has finished, you can add actions here.
+      Serial.println(" light on");
+    
+  }
+}

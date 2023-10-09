@@ -1,0 +1,78 @@
+// external triger code esp32 or arduino uno
+// Define constants for pins
+const int triggerPin = 2;  // Pin connected to the external trigger
+const int ledPin = 13;     // Pin connected to the LED (built-in LED on most Arduino boards)
+
+// Variable to store the state of the trigger
+int triggerState = 0;
+
+void setup() {
+   Serial.begin(9600);
+  // Initialize the LED pin as an output
+  pinMode(ledPin, OUTPUT);
+  
+  // Initialize the trigger pin as an input
+  pinMode(triggerPin, INPUT);
+  
+  // Initially, turn off the LED
+  digitalWrite(ledPin, LOW);
+}
+
+void loop() {
+  // Read the state of the trigger pin
+  triggerState = digitalRead(triggerPin);
+
+  // Check if the trigger condition is met (e.g., button press)
+  if (triggerState == HIGH) {
+    // Turn on the LED
+    digitalWrite(ledPin, HIGH);
+    Serial.println("SMS Sending!");
+  } else {
+    // Turn off the LED
+    digitalWrite(ledPin, LOW);
+  }
+}
+---------------------------------------------------------------------------------
+10 mins Timed delay code
+To create a power failure alarm using Arduino with a 10-minute delay before sounding the alarm after detecting a power failure, you can use a combination of the Arduino's millis() function and a flag to track the power status. Here's an example code:
+
+```arduino
+const int relayPin = 2;       // Pin connected to the relay module
+const int powerDetectPin = A0;  // Pin to monitor the power status
+
+unsigned long lastPowerLossTime = 0; // Variable to store the last power loss time
+const unsigned long alarmDelay = 600000; // 10 minutes delay (in milliseconds)
+
+bool alarmActive = false; // Flag to indicate if the alarm is active
+
+void setup() {
+  pinMode(relayPin, OUTPUT);
+  pinMode(powerDetectPin, INPUT);
+  digitalWrite(relayPin, LOW); // Ensure the relay is initially off
+  Serial.begin(9600);
+}
+
+void loop() {
+  int powerStatus = analogRead(powerDetectPin);
+
+  if (powerStatus < 100) {
+    // Power failure detected
+    if (!alarmActive) {
+      lastPowerLossTime = millis();
+      alarmActive = true;
+      Serial.println("Power failure detected! Alarm will sound in 10 minutes.");
+    }
+
+    // Check if the 10-minute delay has passed
+    if (millis() - lastPowerLossTime >= alarmDelay) {
+      digitalWrite(relayPin, HIGH); // Turn on the relay (or trigger your alarm)
+      Serial.println("Alarm activated!");
+      // You can add more actions here like sending a notification
+    }
+  } else {
+    digitalWrite(relayPin, LOW); // Power is OK, turn off the relay
+    alarmActive = false; // Reset the alarm flag
+  }
+  
+  delay(1000); // Delay to avoid continuous checking
+}

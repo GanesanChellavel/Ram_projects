@@ -1,0 +1,25 @@
+const int potPin = 34;   // Pin connected to the potentiometer
+const int ledPin = 13;   // Pin connected to the LED
+const int threshold = 1;  // Threshold value to turn on/off the LED (adjust as needed)
+
+void setup() {
+  pinMode(potPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(115200);
+}
+
+void loop() {
+  int sensorValue = analogRead(potPin); // Read the potentiometer value
+
+  if (sensorValue <= threshold) {
+    digitalWrite(ledPin, HIGH); // Turn on the LED
+  } else {
+    digitalWrite(ledPin, LOW);  // Turn off the LED
+  }
+
+  Serial.print("Sensor Value: ");
+  Serial.println(sensorValue);
+
+  delay(1000); // Delay for stability (adjust as needed)
+}
+-
